@@ -1,0 +1,31 @@
+class Solution {
+    vector<vector<int> >res;
+	void generate(vector<int> &num, vector<int>rec, vector<int>ans, int cnt)
+	{
+		if (cnt == num.size()) {
+			res.push_back(ans);
+			return;
+		}
+		for (int i = 0; i < num.size(); ++i) {
+			if (!rec[i]) {
+				ans.push_back(num[i]);
+				rec[i] = 1;
+				generate(num, rec, ans, cnt + 1);
+				rec[i] = 0;
+				ans.pop_back();
+			}
+		}
+	}
+public:
+    vector<vector<int> > permute(vector<int> &num) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        res.clear();
+        int n = num.size();
+        vector<int>tmp;
+        tmp.assign(n, 0);
+        vector<int>tmp2;
+        generate(num, tmp, tmp2, 0);
+        return  res;
+    }
+};

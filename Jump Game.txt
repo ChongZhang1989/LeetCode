@@ -1,0 +1,31 @@
+class Solution {
+public:
+    bool canJump(int A[], int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        if (n == 1)
+            return true;
+        queue<int>q;
+        int *a = A;
+        vector<int>rec;
+        rec.assign(n, 0);
+        rec[0] = 1;
+        q.push(0);
+        while (!q.empty()) {
+            int p = q.front();
+            q.pop();
+            int dis = a[p];
+            for (int i = p + dis; i >= p + 1; --i) {
+            	if (i >= n - 1)
+            		return true;
+            	if (!rec[i]) {
+            		rec[i] = 1;
+            		q.push(i);
+            	} else {
+                    break;   
+            	}
+            }
+        }
+        return false;
+    }
+};

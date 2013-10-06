@@ -1,0 +1,46 @@
+class Solution {
+    int binary(int *a, int target, int l, int r)
+	{
+		while (l <= r) {
+			int m = (l + r) >> 1;
+			if (a[m] == target)
+				return m;
+			else if (a[m] > target)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return -1;
+	}
+	int solve(int *a, int target, int l, int r)
+	{
+		int m = (l + r) >> 1;
+		if (a[m] == target)
+			return m;
+		int x = a[l], y = a[m], z = a[r];
+		if (x <= y && z >= y) {
+			return binary(a, target, l, r);
+		}
+		if (x <= y && z <= y) {
+			if (target >= x && target <= y) {
+				return binary(a, target, l, m);
+			}
+			if (target > y || target <= z) {
+				return solve(a, target, m + 1, r);
+			}
+		}
+		if (y <= x && y <= z) {
+			if (target >= y && target <= z) {
+				return binary(a, target, m, r);
+			}
+			return solve(a, target, l, m - 1);
+		}
+		return -1;
+	}
+public:
+    int search(int A[], int n, int target) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        return solve(A, target, 0, n - 1);
+    }
+};

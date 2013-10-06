@@ -1,0 +1,64 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    bool flg = true;
+    struct pair {
+        int min, max;
+    };
+    pair check(TreeNode *node)
+    {        
+        pair t;
+        if (!flg) {
+            return t;
+        }
+        if (node->left == NULL && node->right == NULL) {
+            t.min = node->val;
+            t.max = node->val;
+            return t;
+        }
+        int f = 0;
+        if (node->left != NULL) {
+            f = 1;
+            t = check(node->left);
+            if (t.max >= node->val) {
+                flg = false;
+                return t;
+            }
+        }
+        pair t2;
+        t2.max = node->val;
+        if (node->right != NULL) {
+            t2 = check(node->right);
+            if (t2.min <= node->val) {
+                flg = false;
+                return t;
+            }
+        }
+        if (!f) {
+            t.min = node->val;
+        }
+        pair t3;
+        t3.max = t2.max;
+        t3.min = t.min;
+        return t3;
+    }
+public:
+    bool isValidBST(TreeNode *root) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        flg = true;
+        if (root == NULL) {
+            return true;
+        }
+        check(root);
+        return flg;
+    }
+    
+};

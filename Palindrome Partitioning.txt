@@ -1,0 +1,41 @@
+class Solution {
+    bool palindrome(string &s, int x, int y)
+	{
+		int l = x;
+		int r = y;
+		while (l < r) {
+			if (s[l] != s[r])
+				return false;
+			l++;
+			r--;
+		}
+		return true;
+	}
+public:
+    vector<vector<string>> partition(string s) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int n = s.size();
+        vector<vector<vector<string> > >dp(n);
+        dp[0].push_back(vector<string>(1, s.substr(0, 1)));
+        for (int i = 1; i < n; ++i) {
+        	if (palindrome(s, 0, i)) {
+        		dp[i].push_back(vector<string>(1, s.substr(0, i + 1)));
+        	}
+        	for (int j = 0; j < i; ++j) {
+        		if (palindrome(s, j + 1, i)) {
+        			string tmp = s.substr(j + 1, i - j);
+        			for (int k = 0; k < dp[j].size(); ++k) {
+        				vector<string>v;
+        				for (vector<string>::iterator it = dp[j][k].begin(); it != dp[j][k].end(); ++it) {
+        					v.push_back(*it);
+        				}
+        				v.push_back(tmp);
+        				dp[i].push_back(v);
+        			}
+        		}
+        	}
+        }
+        return dp[n - 1];
+    }
+};

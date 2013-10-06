@@ -1,0 +1,82 @@
+class Solution {
+public:
+    string minWindow(string S, string T) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        if (S.size() == 0 || T.size() == 0)
+            return string("");
+        unordered_map<char, int>rec;
+        for (int i = 0; i < T.size(); ++i) {
+        	rec[T[i]]++;
+        }
+        int x, y;
+        int l = 0, r = 0;
+        int minLength;
+        int cnt = 0;
+        for (int i = 0; i < S.size(); ++i) {
+        	if (rec.count(S[i])) {
+        		rec[S[i]]--;
+        		cnt += (rec[S[i]] >= 0);
+        	}
+        	if (cnt >= T.size())
+        		break;
+        	++r;
+        }
+        if (cnt < T.size())
+        	return string("");
+        x = l;
+        y = r;
+        minLength = y - x;
+        while (l <= r && r < S.size()) {
+        	if ( !rec.count(S[l]) ) {
+        		l++;
+        		if (l > r)
+        			continue;
+        		if (minLength > r - l) {
+        			x = l;
+        			y = r;
+        			minLength = r - l;
+        		}
+        		continue;
+        	}
+        	rec[S[l]]++;
+        	char c = S[l];
+        	l++;
+        	if (rec[c] > 0) {
+        		int flg = 0;
+				++r;
+        		while (r < S.size()) {
+        			if (S[r] == c) {
+        				rec[c]--;
+        				flg = 1;
+        				break;
+        			}
+        			if ( rec.count(S[r]) ) {
+        				rec[S[r]]--;
+        			}
+        			r++;
+        		}
+        		if (flg) {
+        			if (l > r)
+        				continue;
+        			if (minLength > r - l) {
+        				x = l;
+        				y = r;
+        				minLength = r - l;
+        			}
+        		} else {
+        			break;
+        		}
+        	} else {
+        		if (l > r)
+        			continue;
+        		if (minLength > r - l) {
+        			x = l;
+        			y = r;
+        			minLength = r - l;
+        		}
+        	}
+        }
+        return S.substr(x, y - x + 1);
+    }
+};

@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int maxSubArray(int A[], int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int all_max = A[0];
+        int now_max = 0;
+        int *a = A;
+        for (int i = 0; i < n; ++i) {
+            all_max = max(all_max, a[i]);
+        }
+        if (all_max <= 0)
+            return all_max;
+        for (int i = 0; i < n; ++i) {
+            now_max = max(0, now_max + a[i]);
+            all_max = max(all_max, now_max);
+        }
+        return all_max;
+    }
+};

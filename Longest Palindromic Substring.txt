@@ -1,0 +1,50 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int ml = 0;
+        int mr = 0;
+        int max_length = 1;
+        int n = s.size();
+        for (int i = 0; i < n; ++i) {
+            int l = i - 1;
+        	int r = i + 1;
+        	int flg = 0;
+        	while (l >= 0 && r < n) {
+        		flg = 1;
+        		if (s[l] != s[r]) {
+        			break;
+        		}
+        		l--;
+        		r++;
+        	}
+        	l++;
+        	r--;
+        	if (r - l + 1 > max_length && flg) {
+        		ml = l;
+        		mr = r;
+        		max_length = r - l + 1;
+        	}
+        	l = i;
+        	r = i + 1;
+        	flg = 0;
+        	while (l >= 0 && r < n) {
+        		flg = 1;
+        		if (s[l] != s[r]) {	
+        			break;
+        		}
+        		l--;
+        		r++;
+        	}
+        	l++;
+        	r--;
+        	if (r - l + 1 > max_length && flg) {
+        		ml = l;
+        		mr = r;
+        		max_length = r - l + 1;
+        	}
+        }
+        return s.substr(ml, max_length);
+    }
+};

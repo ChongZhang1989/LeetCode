@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int> > &matrix, int target) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int n = matrix.size();
+        if (!n)
+            return false;
+        int m = matrix[0].size();
+		int l = 0;
+		int r = n - 1;
+		while (l <= r) {
+			int m = (l + r) >> 1;
+			if (matrix[m][0] == target)
+				return true;
+			else if (matrix[m][0] < target)
+				l = m + 1;
+			else
+				r = m - 1;
+		}
+		int ll = l;
+		int rr = r;
+		if (rr >= 0) {
+			l = 0;
+			r = m - 1;
+			while (l <= r) {
+				int m = (l + r) >> 1;
+				if (matrix[rr][m] == target)
+					return true;
+				else if (matrix[rr][m] < target)
+					l = m + 1;
+				else
+					r = m - 1;
+			}
+		}
+		return false;
+    }
+};

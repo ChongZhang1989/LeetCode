@@ -1,0 +1,94 @@
+class Solution {
+    struct node {
+		node *left, *right;
+		int x, y;
+		int minPosition;
+		node(int _x, int _y)
+		{
+			x = _x;
+			y = _y;
+			minPosition = -1;
+			left = NULL;
+			right = NULL;
+		}
+	};
+	
+	int build(vector<int> &a, node *root)
+	{
+		int x = root->x;
+		int y = root->y;
+		if (x == y) {
+			root->minPosition = x;
+			return x;
+		}
+		int m = (x + y) >> 1;
+		root->left = new node(x, m);
+		root->right = new node(m + 1, y);
+		int p1 = build(a, root->left);
+		int p2 = build(a, root->right);
+		if (a[p1] < a[p2]) {
+			root->minPosition = p1;
+		} else {
+			root->minPosition = p2;
+		}
+		return root->minPosition;
+	}
+	int find(vector<int> &a, node *root, int l, int r)
+	{
+		if (root->x == l && root->y == r) {
+			return root->minPosition;
+		}
+		int m = (root->x + root->y) >> 1;
+		int p1, p2;
+		if (r <= m) {
+			p1 = p2 = find(a, root->left, l, r);
+		}
+		else if (l > m) {
+			p1 = p2 = find(a, root->right, l, r);
+		}
+		else {
+			p1 = find(a, root->left, l, m);
+			p2 = find(a, root->right, m + 1, r);
+		}
+		if (a[p1] < a[p2]) {
+			return p1;
+		} else {
+			return p2;
+		}
+	}
+	int solve(vector<int> &a, node *root, int l, int r)
+	{
+		if (l > r)
+			return 0;
+		int p = find(a, root, l, r);
+		int v1 = a[p] * (r - l + 1);
+		int v2 = solve(a, root, l, p - 1);
+		int v3 = solve(a, root, p + 1, r);
+		v1 = max(v1, v2);
+		v1 = max(v1, v3);
+		return v1;
+	}
+	void cut(node *root)
+	{
+		if (root == NULL) {
+			return;
+		}
+		cut(root->left);
+		delete root->left;
+		cut(root->right);
+		delete root->right;
+	}
+public:
+    int largestRectangleArea(vector<int> &height) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        if (height.size() == 0)
+        	return 0;
+        node *root = new node(0, height.size() - 1);
+        root->minPosition = build(height, root);
+        int ans = solve(height, root, 0, height.size() - 1);
+        cut(root);
+        delete root;
+        return ans;
+    }
+};

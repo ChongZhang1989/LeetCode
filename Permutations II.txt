@@ -1,0 +1,55 @@
+class Solution {
+    class KeyHash {
+	public:
+		size_t operator () (const vector<int> &a) const
+		{
+			int ans = 0;
+			for (int i = 0; i < a.size(); ++i) {
+				ans <<= 1;
+				ans += a[i];
+			}
+			return ans;
+		}
+	};
+	class KeyEqual {
+	public:
+		bool operator () (const vector<int> &a, const vector<int> &b) const
+		{
+			if (a.size() != b.size())
+				return false;
+			for (int i = 0; i < a.size(); ++i) {
+				if (a[i] != b[i])
+					return false;
+			}
+			return true;
+		}
+	};
+	void dfs(unordered_set<vector<int>, KeyHash, KeyEqual> &rec, vector<int> &num, vector<int> result, vector<int> v)
+	{
+		if (num.size() == result.size()) {
+			rec.insert(result);
+			return;
+		}
+		for (int i = 0; i < num.size(); ++i) {
+			if (!v[i]) {
+				v[i] = 1;
+				result.push_back(num[i]);
+				dfs(rec, num, result, v);
+				v[i] = 0;
+				result.pop_back();
+			}
+		}
+	}
+public:
+    vector<vector<int> > permuteUnique(vector<int> &num) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        unordered_set<vector<int>, KeyHash, KeyEqual> rec;
+        dfs(rec, num, vector<int>(0), vector<int>(num.size(), 0));
+        vector<vector<int> >ans;
+        for (unordered_set<vector<int>, KeyHash, KeyEqual>::iterator it = rec.begin(); it != rec.end(); ++it) {
+        	ans.push_back(*it);
+        }
+        return ans;
+    }
+};

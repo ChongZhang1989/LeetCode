@@ -1,0 +1,66 @@
+class Solution {
+    struct node {
+		int x, y, z;
+		node() {}
+		node(int _x, int _y, int _z) : x(_x), y(_y), z(_z) {}
+	};
+	class KeyHash {
+	public:
+		size_t operator () (const node &a) const
+		{
+			return hash<int>() (a.x ^ (a.y << 1) ^ (a.z << 2));
+		}
+	};
+	class KeyEqual {
+	public:
+		size_t operator () (const node &a, const node &b) const
+		{
+			return a.x == b.x && a.y == b.y && a.z == b.z;
+		}
+	};
+	int solve(unordered_map<node, int, KeyHash, KeyEqual> &dp, string &s1, int i, string &s2, int j, string &s3, int k)
+	{
+		if (i == 0 && j == 0 && k == 0)
+			return true;
+		if (dp.count(node(i, j, k))) {
+			return dp[node(i, j, k)];
+		}
+		if (i == 0) {
+			if (s2[j - 1] != s3[k - 1]) {
+				return dp[node(i, j, k)] = 0;
+			}
+			return dp[node(i, j, k)] = solve(dp, s1, i, s2, j - 1, s3, k - 1);
+		}
+		if (j == 0) {
+			if (s1[i - 1] != s3[k - 1]) {
+				return dp[node(i, j, k)] = 0;
+			}
+			return dp[node(i, j, k)] = solve(dp, s1, i - 1, s2, j, s3, k - 1);
+		}
+		int ans = 0;
+		if (s1[i - 1] == s3[k - 1])
+			ans = solve(dp, s1, i - 1, s2, j, s3, k - 1);
+		if (s2[j - 1] == s3[k - 1]) {
+			ans |= solve(dp, s1, i, s2, j - 1, s3, k - 1);
+		}
+		return dp[node(i, j, k)] = ans;
+	}
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function  
+        int n1 = s1.size();  
+    	int n2 = s2.size();
+    	int n3 = s3.size();
+    	if (n3 != n1 + n2)
+    		return false;
+    	unordered_map<node, int, KeyHash, KeyEqual>dp;
+    	//vector<vector<vector<int> > >dp(n1 + 1, vector<vector<int> >(n2 + 1, vector<int>(n3 + 1, -1)));
+        //dp[0][0][0] = 1;
+        dp[node(0, 0, 0)] = 1;
+        int ans =  solve(dp, s1, n1, s2, n2, s3, n3);
+        if (ans)
+        	return true;
+        return false;
+    }
+};

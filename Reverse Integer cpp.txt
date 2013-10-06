@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int reverse(int x) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int flg = 0;
+        if (x < 0) {
+            flg = 1;
+            x = -x;
+        }
+        char a[100];
+        sprintf(a, "%d", x);
+        char ret[100];
+        int cnt = 0;
+        if (flg) {
+            ret[cnt++] = '-';
+        }
+        int len = strlen(a);
+        for (int i = len - 1; i >= 0; i--) {
+            ret[cnt++] = a[i];
+        }
+        ret[cnt] = 0;
+        int r;
+        sscanf(ret, "%d", &r);
+        return r;
+    }
+};

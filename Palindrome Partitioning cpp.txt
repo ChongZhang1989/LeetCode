@@ -1,0 +1,39 @@
+class Solution {
+    string ss;
+    vector<vector<string> >res;
+    bool isPal(int l, int r)
+    {
+        while (l < r) {
+            if (ss[l] != ss[r])
+                return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+    void dfs(int start, vector<string>v)
+    {
+        int n = ss.size();
+        if (start == n) {
+            res.push_back(v);
+            return;
+        }
+        for (int i = start; i < n; ++i) {
+            if (isPal(start, i)) {
+                vector<string> t = v;
+                t.push_back(string (ss, start, i - start + 1));
+                dfs(i + 1, t);
+            }
+        }
+    }
+public:
+    vector<vector<string>> partition(string s) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        ss = s;
+        res.clear();
+        vector<string>v;
+        dfs(0, v);
+        return res;
+    }
+};

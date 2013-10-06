@@ -1,0 +1,66 @@
+class Solution {
+    struct node {
+    	int x, y;
+	};
+	int available(node &tmp, vector<node>&queen)
+	{
+		for (vector<node>::iterator it = queen.begin(); it != queen.end(); ++it) {
+			int x = (*it).x;
+			int y = (*it).y;
+			if (tmp.x == x || tmp.y == y)
+				return 0;
+			if (abs(x - tmp.x) == abs(y - tmp.y))
+				return 0;
+		}
+		return 1;
+	}
+	vector<vector<string> >result;
+	void find(vector<node>queen, int n, vector<int>m)
+	{
+		int l = queen.size();
+		if (l == n) {
+			vector<string>ans;
+			for (int i = 0; i < n; ++i) {
+				string tmp = "";
+				for (int j = 0; j < n; ++j) {
+					tmp += '.';
+				}
+				ans.push_back(tmp);
+			}
+			for (vector<node>::iterator it = queen.begin(); it != queen.end(); ++it) {
+				int x = (*it).x;
+				int y = (*it).y;
+				ans[x][y] = 'Q';
+			}
+			result.push_back(ans);
+			return;
+		}
+		node tmp;
+		for (int i = 0; i < n; ++i) {
+			//if (m[i])
+				//continue;
+			tmp.x = i;
+			tmp.y = l;
+			if (available(tmp, queen)) {
+				queen.push_back(tmp);
+				//m[i] = 1;
+				find(queen, n, m);
+				//m[i] = 0;
+				queen.pop_back();
+			}
+		}
+	}
+public:
+    vector<vector<string> > solveNQueens(int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        result.clear();
+        vector<node>queen;
+        vector<int>m;
+    	for (int i = 0; i < n; ++i) {
+    		m.push_back(0);
+    	}
+        find(queen, n, m);
+        return result;
+    }
+};

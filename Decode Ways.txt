@@ -1,0 +1,32 @@
+class Solution {
+    int solve(vector<int> &dp, string &s, int p)
+    {
+		if (p == s.size() )
+			return 1;
+		if (dp[p] != -1)
+			return dp[p];
+		if (p == s.size() - 1) {
+			if (s[p] != '0')
+				return 1;
+			else
+				return 0;
+		}
+		int ans = 0;
+		if (s[p] != '0')
+			ans += solve(dp, s, p + 1);
+		if ( s[p] == '1' || (s[p] == '2' && s[p + 1] <= '6') ) {
+			ans += solve(dp, s, p + 2);
+		}
+		return dp[p] = ans;
+	}
+public:
+    int numDecodings(string s) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        if (s.size() == 0)
+        	return 0;
+        vector<int>dp;
+        dp.assign(s.size(), -1);
+        return solve(dp, s, 0);
+    }
+};

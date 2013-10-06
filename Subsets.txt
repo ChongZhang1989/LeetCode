@@ -1,0 +1,22 @@
+class Solution {
+    void generate(vector<vector<int> > &ans, vector<int>&s, vector<int> res, int n)
+	{
+		if (s.size() == n) {
+			ans.push_back(res);
+			return;
+		}
+		generate(ans, s, res, n + 1);
+		res.push_back(s[n]);
+		generate(ans, s, res, n + 1);
+	}
+public:
+    vector<vector<int> > subsets(vector<int> &S) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        vector<vector<int> >ans;
+        sort(S.begin(), S.end());
+        vector<int>tmp;
+        generate(ans, S, tmp, 0);
+        return ans;
+    }
+};

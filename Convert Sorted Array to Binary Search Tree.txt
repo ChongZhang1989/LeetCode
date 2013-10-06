@@ -1,0 +1,39 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    int convert(TreeNode *root, vector<int> &num, int l, int r)
+    {
+        if (l > r) {
+            delete root;
+        	return 0;
+        }
+        int mid = (l + r) >> 1;
+        root->val = num[mid];
+        root->left = new TreeNode(0);
+        root->right = new TreeNode(0);
+        int x = convert(root->left, num, l, mid - 1);
+        int y = convert(root->right, num, mid + 1, r);
+        if (!x)
+        	root->left = NULL;
+        if (!y)
+        	root->right = NULL;
+        return 1;
+    }
+public:
+    TreeNode *sortedArrayToBST(vector<int> &num) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        TreeNode *root = new TreeNode(0);
+        if (!convert(root, num, 0, num.size() - 1)) {
+        	root = NULL;
+        }
+        return root;
+    }
+};

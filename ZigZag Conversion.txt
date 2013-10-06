@@ -1,0 +1,29 @@
+class Solution {
+public:
+    string convert(string s, int nRows) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function    
+        if (nRows == 1)
+            return s;
+        string t = "";
+        int dis = 2 * (nRows - 1);
+        int step1 = dis;
+        int step2 = dis;
+        int l = s.size();
+        for (int i = 0; i < nRows; ++i) {
+            int j = i;
+            step2 = step1;
+            if (!step2)
+                step2 = dis - step2;
+            while (j < l) {
+                t += s[j];
+            	j += step2;
+            	step2 = dis - step2;
+            	if (!step2)
+            		step2 = dis - step2;
+            }
+            step1 -= 2;
+        }
+        return t;
+    }
+};

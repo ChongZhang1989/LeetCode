@@ -1,0 +1,67 @@
+class Solution {
+    struct node {
+        int min, max;
+        int l, r;
+    };
+    struct ret {
+        int min, max;
+    };
+    const static int N = 100000;
+    node tree[N];
+    vector<int>a;
+    ret build(int num, int l, int r) {
+        tree[num].l = l;
+        tree[num].r = r;
+        if (l == r) {
+            ret r3;
+            r3.min = a[l];
+            r3.max = a[l];
+            tree[num].min = r3.min;
+            tree[num].max = r3.max;
+            return r3;
+        }
+        
+        int mid = (l + r) >> 1;
+        ret r1 = build(2 * num + 1, l, mid);
+        ret r2 = build(2 * num + 2, mid + 1, r);
+        ret r3;
+        r3.min = min(r1.min, r2.min);
+        r3.max = max(r1.max, r2.max);
+        tree[num].min = r3.min;
+        tree[num].max = r3.max;
+        return r3;
+    }
+    int query_min(int num, int l, int r) {
+        if (l == tree[num].l && r == tree[num].r) {
+            return tree[num].min;
+        }
+        int mid = (tree[num].l + tree[num].r) >> 1;
+        if (r <= mid) {
+            return query_min(2 * num + 1, l, r);
+        }
+        if (l >= mid + 1) {
+            return query_min(2 * num + 2, l, r);
+        }
+        return min(query_min(2 * num + 1, l, mid), query_min(2 * num + 2, mid + 1, r));
+    }
+public:
+    int maxProfit(vector<int> &prices) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        a = prices;
+        int n = prices.size();
+        if (n <= 1) {
+            return 0;
+        }
+        build(0, 0, n - 1);
+        int max = 0;
+        for (int i = 1; i < n; ++i) {
+            int t = query_min(0, 0, i - 1);
+            //printf("%d ", t);
+            if (a[i] - t > max) {
+                max = a[i] - t;
+            }
+        }
+        return max;
+    }
+};

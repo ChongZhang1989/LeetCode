@@ -1,0 +1,54 @@
+class Solution {
+    class KeyHash {
+	public:
+		size_t operator () (const vector<int> &a) const
+		{
+			int ans = 0;
+			for (int i = 0; i < a.size(); ++i) {
+				ans = ans << 1;
+				ans += a[i];
+			}
+			return ans;
+		}
+	};
+	class KeyEqual {
+	public:
+		bool operator () (const vector<int> &a, const vector<int> &b) const
+		{
+			if (a.size() != b.size())
+				return false;
+			for (int i = 0; i < a.size(); ++i) {
+				if (a[i] != b[i])
+					return false;
+			}
+			return true;
+		}
+	};
+	void dfs(unordered_set<vector<int>, KeyHash, KeyEqual> &rec, vector<int> &num, int cnt, int target, vector<int>result)
+	{
+		if (target < 0)
+			return;
+		if (target == 0) {
+			rec.insert(result);
+			return;
+		}
+		for (int i = cnt; i < num.size(); ++i) {
+			result.push_back(num[i]);
+			dfs(rec, num, i + 1, target - num[i], result);
+			result.pop_back();
+		}
+	}
+public:
+    vector<vector<int> > combinationSum2(vector<int> &num, int target) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        sort(num.begin(), num.end());
+        vector<vector<int> >ans;
+        unordered_set<vector<int>, KeyHash, KeyEqual>rec;
+        dfs(rec, num, 0, target, vector<int>(0));
+        for (unordered_set<vector<int>, KeyHash, KeyEqual>::iterator it = rec.begin(); it != rec.end(); ++it) {
+        	ans.push_back(*it);
+        }
+        return ans;
+    }
+};

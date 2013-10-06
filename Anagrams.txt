@@ -1,0 +1,59 @@
+class Solution {
+    class KeyHash {
+	public:
+		size_t operator () (const vector<int> &a) const
+		{
+			int ret = 0;
+			for (int i = 0; i < a.size(); ++i) {
+				ret = (ret << 1) ^ a[i];
+			}
+			return ret;
+		}
+	};
+	class KeyEqual {
+	public:
+	bool operator () (const vector<int> &a, const vector<int> &b) const
+		{
+			if (a.size() != b.size())
+				return false;
+			for (int i = 0; i < a.size(); ++i) {
+				if (a[i] != b[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+	};
+public:
+    vector<string> anagrams(vector<string> &strs) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int n = strs.size();
+        if (strs.size() < 2) {
+        	vector<string>t;
+        	return t;
+        }
+        vector<vector<int> >rec;
+        vector<int>tmp;
+        tmp.assign(26, 0);
+        rec.assign(n, tmp);
+        unordered_map<vector<int>, int, KeyHash, KeyEqual>m;
+        vector<string>ans;
+        for (int i = 0; i < n; ++i) {
+        	for (int j = 0; j < strs[i].size(); ++j) {
+        		rec[i][strs[i][j] - 'a']++;
+        	}
+        	if (!m.count(rec[i])) {
+        		m[rec[i]] = i;
+        	} else {
+        		int p = m[rec[i]];
+        		if (p != -1) {
+        			ans.push_back(strs[p]);
+        			m[rec[i]] = -1;
+        		}
+        		ans.push_back(strs[i]);
+        	}
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> searchRange(int A[], int n, int target) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int l = 0, r = n - 1;
+        int *a = A;
+        while (l <= r) {
+            int m = (l + r) >> 1;
+        	if (a[m] == target) {
+        		int x = m - 1;
+        		while (x >= 0 && a[x] == target)
+        			--x;
+        		++x;
+        		int y = m + 1;
+        		while (y < n && a[y] == target)
+        			++y;
+        		--y;
+        		vector<int>ans;
+        		ans.push_back(x);
+        		ans.push_back(y);
+        		return ans;
+        	} else if (a[m] < target) {
+        		l = m + 1;
+        	} else {
+        		r = m - 1;
+        	}
+        }
+        return vector<int>(2, -1);
+    }
+};

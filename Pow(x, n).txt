@@ -1,0 +1,31 @@
+class Solution {
+    typedef long long ll;
+    double solve(double x, ll n)
+    {
+    	if (n < 0)
+    		n = -n;
+    	double ret = 1;
+    	while (n) {
+    	
+    	ll cnt = 2;
+    	double ans = x;
+    	while (cnt <= n) {
+    		ans *= ans;
+    		cnt *= 2;
+    	}
+    	cnt = cnt / 2;
+    	n -= cnt;
+    	ret *= ans;
+    	}
+    	return ret;
+    }
+public:
+    double pow(double x, int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        double ans = solve(x, n);
+        if (n < 0)
+        	ans = 1 / ans;
+        return ans;
+    }
+};

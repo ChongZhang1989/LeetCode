@@ -1,0 +1,31 @@
+class Solution {
+    #define gn(x) (x - '0')
+public:
+    string countAndSay(int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        //int prev[1000] = "1";
+        //int ans[1000] = "1";
+        char a[10000] = "1";
+        char b[10000] = "1";
+        for (int i = 1; i < n; ++i) {
+            //sprintf(a, "%d", prev);
+            int l = strlen(a);
+            int cnt = 1;
+            int index = 0;
+            int num = gn(a[0]);
+            for (int j = 1; j <= l; ++j) {
+                if (gn(a[j]) == num)
+                    cnt++;
+                else {
+                    sprintf(&b[index], "%d%d", cnt, num);
+                    index = strlen(b);
+                    num = gn(a[j]);
+                    cnt = 1;
+                }
+            }   //for j
+            strcpy(a, b);
+        }   //for i
+        return string(b);
+    }
+};

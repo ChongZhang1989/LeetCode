@@ -1,0 +1,62 @@
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char> > &board) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int l = board.size();
+        if (l != 9)
+            return false;
+        for (int i = 0; i < 9; ++i) {
+            if (board[i].size() != 9)
+                return false;
+        }
+        //row
+        for (int i = 0; i < 9; ++i) {
+            int visit[10] = {0};
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] == '.') {
+                    continue;
+                } else if (board[i][j] >= '1' && board[i][j] <= '9') {
+                    if (visit[board[i][j] - '0']) {
+                        return false;
+                    } else {
+                        visit[board[i][j] - '0'] = 1;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+        //column
+        for (int i = 0; i < 9; ++i) {
+            int visit[10] = {0};
+            for (int j = 0; j < 9; ++j) {
+                if (board[j][i] != '.') {
+                    if (visit[board[j][i] - '0']) {
+                        return false;
+                    } else {
+                        visit[board[j][i] - '0'] = 1;
+                    }
+                }
+            }
+        }
+        //square
+        for (int i = 0; i < 9; i += 3) {
+            for (int j = 0; j < 9; j += 3) {
+                int visit[10] = {0};
+                for (int x = i; x < i + 3; ++x) {
+                    for (int y = j; y < j + 3; ++y) {
+                        if (board[x][y] != '.') {
+                            if (visit[board[x][y] - '0']) {
+                                return false;
+                            } else {
+                                visit[board[x][y] - '0'] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};

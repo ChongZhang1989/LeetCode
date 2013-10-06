@@ -1,0 +1,62 @@
+class Solution {
+    struct pair {
+        int x, y;
+    };
+    int n, m;
+    int direct[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    void getRec(vector<vector<char> > &board, vector<vector<bool> > &rec, int x, int y)
+    {
+        if (board[x][y] == 'X')
+            return;
+        queue<pair>q;
+        //q.clear();
+        pair t;
+        t.x = x;
+        t.y = y;
+        q.push(t);
+        rec[x][y] = true;
+        while (!q.empty()) {
+            t = q.front();
+            q.pop();
+            pair tmp;
+            for (int i = 0; i < 4; ++i) {
+                tmp.x = t.x + direct[i][0];
+                tmp.y = t.y + direct[i][1];
+                if (tmp.x < 0 || tmp.y < 0 || tmp.x >= m || tmp.y >= n)
+                    continue;
+                if (!rec[tmp.x][tmp.y] && board[tmp.x][tmp.y] != 'X') {
+                    rec[tmp.x][tmp.y] = true;
+                    q.push(tmp);
+                }
+            }
+        }
+    }
+public:
+    void solve(vector<vector<char>> &board) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        m = board.size();
+        if (m == 0)
+            return;
+        n = board[0].size();
+        vector<bool>tt;
+        tt.assign(n, false);
+        vector<vector<bool> >rec;
+        rec.assign(m, tt);
+        for (int i = 0; i < m; ++i) {
+            getRec(board, rec, i, 0);
+            getRec(board, rec, i, n - 1);
+        }
+        for (int i = 0; i < n; ++i) {
+            getRec(board, rec, 0, i);
+            getRec(board, rec, m - 1, i);
+        }
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (!rec[i][j] && board[i][j] != 'X') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+};

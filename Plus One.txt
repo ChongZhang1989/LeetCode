@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<int> plusOne(vector<int> &digits) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int extra = 1;
+        int l = digits.size();
+        vector<int>num;
+        for (int i = l - 1; i >= 0; --i) {
+            int x = digits[i] + extra;
+            num.push_back(x % 10);
+            extra = x / 10;
+        }
+        if (extra) {
+            num.push_back(1);
+        }
+        l = num.size();
+        vector<int>ans;
+        for (int i = l - 1; i >= 0; --i) {
+            ans.push_back(num[i]);
+        }
+        return ans;
+    }
+};

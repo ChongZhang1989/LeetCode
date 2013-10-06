@@ -1,0 +1,57 @@
+class Solution {
+    class KeyHash {
+	public:
+		size_t operator () (const vector<int> &k) const
+		{
+			int ret = 0;
+			for (int i = 0; i < k.size(); ++i) {
+				ret = ret << 1;
+				ret =  ret ^ k[i];
+			}
+            return ret;
+		}
+	};
+	class KeyEqual {
+	public:
+		bool operator () (const vector<int> &a, const vector<int> &b) const
+		{
+			if (a.size() != b.size())
+				return false;
+			for (int i = 0; i < a.size(); ++i) {
+				if (a[i] != b[i])
+					return false;
+			}
+			return true;
+		}
+	};
+	unordered_map<vector<int>, int, KeyHash, KeyEqual>rec;
+	vector<vector<int> >res;
+	void generate(int target, vector<int> &a, vector<int>ans)
+	{
+		if (target == 0) {
+			sort(ans.begin(), ans.end());
+			if (!rec.count(ans)) {
+				rec[ans] = 1;
+				res.push_back(ans);
+				return;
+			}
+		}
+		for (int i = 0; i < a.size(); ++i) {
+			if (a[i] <= target) {
+				ans.push_back(a[i]);
+				generate(target - a[i], a, ans);
+				ans.pop_back();
+			}
+		}
+	}
+public:
+    vector<vector<int> > combinationSum(vector<int> &candidates, int target) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        rec.clear();
+        res.clear();
+        vector<int>tmp;
+        generate(target, candidates, tmp);
+        return res;
+    }
+};

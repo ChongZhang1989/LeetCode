@@ -1,0 +1,60 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        ListNode *l = NULL;
+        ListNode *p = NULL;
+        int extra = 0;
+        if (l1 != NULL && l2 != NULL) {
+            int x = l1->val + l2->val;
+        	l = new ListNode(x % 10);
+        	p = l;
+        	extra = x / 10;
+        	l1 = l1->next;
+        	l2 = l2->next;
+        }
+        for (; l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next) {
+            int x = l1->val + l2->val + extra;
+            p->next = new ListNode(x % 10);
+            p = p->next;
+            extra = x / 10;
+        }
+        while (l1 != NULL) {
+        	int x = l1->val + extra;
+        	extra = x / 10;
+        	l1 = l1->next;
+        	if (l == NULL) {
+        		l = new ListNode(x % 10);
+        		p = l;
+        		continue;
+        	}
+        	p->next = new ListNode(x % 10);
+        	p = p->next;
+        }
+        while (l2 != NULL) {
+        	int x = l2->val + extra;
+        	extra = x / 10;
+        	l2 = l2->next;
+        	if (l == NULL) {
+        		l = new ListNode(x % 10);
+        		p = l;
+        		continue;
+        	}
+        	p->next = new ListNode(x % 10);
+        	p = p->next;
+        }
+        if (extra) {
+        	p->next = new ListNode(1);
+        }
+        return l;
+    }
+};

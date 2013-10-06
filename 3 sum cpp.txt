@@ -1,0 +1,93 @@
+class Solution {
+    static const int N = 0x3fff;
+    struct node
+    {
+        int pos1, pos2;
+        int val1, val2;
+    };
+    vector<node>hash[N + 1];
+    struct ans
+    {
+        int a[3];
+    };
+    static const int M = 0x3fff;
+    vector<ans>set[M + 1];
+    void add(node t, int pos) {
+        int a[3];
+        a[0] = t.val1;
+        a[1] = t.val2;
+        a[2] = - (t.val1 + t.val2);
+        sort(a, a + 3);
+        long long set_val;
+        set_val = (((a[0] << 1) ^ a[1]) << 1) ^ a[2];
+        int n = set[set_val & M].size();
+        int flg = 1;
+        for (int i = 0; i < n; ++i) {
+            ans t = set[set_val & N][i];
+            int j;
+            for (j = 0; j < 3; ++j) {
+                if (t.a[j] != a[j])
+                    break;
+            }
+            if (j == 3) {
+                flg = 0;
+                break;
+            }
+        }
+        if (flg) {
+            ans t;
+            for (int i = 0; i < 3; ++i) {
+                t.a[i] = a[i];
+            }
+            set[set_val & M].push_back(t);
+        }
+    }
+public:
+    vector<vector<int> > threeSum(vector<int> &num) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        for (int i = 0; i <= N; ++i) {
+            hash[i].clear();
+        }
+        for (int j = 0; j <= M; ++j) {
+            set[j].clear();
+        }
+        int n = num.size();
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                int x = num[i] + num[j];
+                node t;
+                t.pos1 = i;
+                t.pos2 = j;
+                t.val1 = num[i];
+                t.val2 = num[j];
+                hash[x & N].push_back(t);
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            int hash_val = -num[i];
+            int m = hash[hash_val & N].size();
+            for (int j = 0; j < m; ++j) {
+                node t;
+                t = hash[hash_val & N][j];
+                if (t.val1 + t.val2 == hash_val && t.pos1 != i && t.pos2 != i) {
+                    add(t, i);
+                }
+            }
+        }
+        vector<vector<int> >vv;
+        
+        for (int i = 0; i <= M; ++i) {
+            n = set[i].size();
+            for (int j = 0; j < n; ++j) {
+                vector<int>v;
+                for (int k = 0; k < 3; ++k) {
+                    v.push_back(set[i][j].a[k]);
+                }
+                vv.push_back(v);
+            }
+        }
+        
+        return vv;
+    }
+};

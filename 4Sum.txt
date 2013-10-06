@@ -1,0 +1,56 @@
+class Solution {
+    class KeyHash {
+	public:
+		size_t operator () (const vector<int>&k) const
+		{
+			return (hash<int>() (k[0]) ) ^ (hash<int>() (k[1] << 1) ) ^ (hash<int>() (k[2] << 2) ) ^ (hash<int>() (k[3] << 3) );
+		}
+	};
+	class KeyEqual {
+	public:
+		bool operator () (const vector<int>&a, const vector<int>&b) const
+		{
+			for (int i = 0; i < 4; ++i) {
+				if (a[i] != b[i])
+					return false;
+			}
+			return true;
+		}
+	};
+public:
+    vector<vector<int> > fourSum(vector<int> &num, int target) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        vector<vector<int> >ans;
+        unordered_map<vector<int>, int, KeyHash, KeyEqual>rec;
+        sort(num.begin(), num.end());
+        int a[4];
+        int n = num.size();
+        for (int a = 0; a < n; ++a) {
+        	for (int b = a + 1; b < n; ++b) {
+        		int c = b + 1;
+        		int d = n - 1;
+        		while (c < d) {
+        			if (num[a] + num[b] + num[c] + num[d] == target) {
+        				vector<int>tmp;
+        				tmp.push_back(num[a]);
+        				tmp.push_back(num[b]);
+        				tmp.push_back(num[c]);
+        				tmp.push_back(num[d]);
+        				sort(tmp.begin(), tmp.end());
+        				if (rec.count(tmp) == 0) {
+        					ans.push_back(tmp);
+        					rec[tmp] = 1;
+        				}
+        			}
+        			if (num[a] + num[b] + num[c] + num[d] > target) {
+        				d--;
+        			} else {
+        				c++;
+        			}
+        		}
+        	}
+        }
+        return ans;
+    }
+};

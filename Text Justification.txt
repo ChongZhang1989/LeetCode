@@ -1,0 +1,71 @@
+class Solution {
+public:
+    vector<string> fullJustify(vector<string> &words, int L) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int i = 0;
+        int cnt = 0;
+        vector<string>ans;
+        if (words.size() == 0)
+            return ans;
+        while (i < words.size()) {
+        	int start = i;
+        	do {
+        		cnt += words[i++].size();
+        		if (i >= words.size()) {
+        			break;
+        		}
+        	} while (words[i].size() + (++cnt) <= L);
+        	cnt = 0;
+        	int lengthSum = 0;
+        	for (int j = start; j < i; ++j) {
+        		lengthSum += words[j].size();
+        	}
+        	int spaceNum = L - lengthSum;
+        	vector<int>spaces;
+        	int n = i - start;
+        	int unit;
+        	if (n == 1) {
+        		string s = words[start];
+        		for (int j = 0; j < spaceNum; ++j) {
+        			s += ' ';
+        		}
+        		ans.push_back(s);
+        		continue;
+        	}
+        	if (i == words.size()) {
+        		string s = words[start];
+        		for (int j = start + 1; j < i; ++j) {
+        			s += ' ';
+        			s += words[j];
+        		}
+        		int t = L - s.size();
+        		while (t--) {
+        			s += ' ';
+        		}
+        		ans.push_back(s);
+        		continue;
+        	}
+        	unit = spaceNum / (n - 1);
+        	for (int j = 0; j < n - 1; ++j) {
+        		spaces.push_back(unit);
+        	}
+        	unit = spaceNum - unit * (n - 1);
+        	for (int j = 0; j < n - 1 && unit > 0; ++j) {
+        		spaces[j]++;
+        		unit--;
+        	}
+        	string s = words[start];
+        	for (int j = start + 1; j < i; ++j) {
+        		for (int k = 0; k < spaces[j - start - 1]; ++k) {
+        			s += ' ';
+        		}
+        		s += words[j];
+        	}
+        	
+        	ans.push_back(s);
+        	}
+        return ans;
+        
+    }
+};

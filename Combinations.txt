@@ -1,0 +1,23 @@
+class Solution {
+    void solve(vector<vector<int> > &ans, vector<int> res, int n, int k, int start, int cnt)
+	{
+		if (cnt == k) {
+			ans.push_back(res);		
+			return;
+		}
+		for (int i = start; i <= n; ++i) {
+			res.push_back(i);
+			solve(ans, res, n, k, i + 1, cnt + 1);
+			res.pop_back();
+		}
+	}
+public:
+    vector<vector<int> > combine(int n, int k) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        vector<vector<int> >ans;
+        vector<int>tmp;
+        solve(ans, tmp, n, k, 1, 0);
+        return ans;
+    }
+};

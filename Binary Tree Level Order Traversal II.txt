@@ -1,0 +1,46 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    map<int, vector<int>* >store;
+    void traverse(TreeNode *root, int level)
+    {
+        if (root == NULL)
+            return;
+        level = -level;
+        vector<int>*tmp;
+        tmp = store[level];
+        if (tmp == NULL) {
+            tmp = store[level] = new vector<int>();
+        }
+        (*tmp).push_back(root->val);
+        level = -level;
+        traverse(root->left, level + 1);
+        traverse(root->right, level + 1);
+    }
+    void clear()
+    {
+        for (map<int, vector<int>* >::iterator it = store.begin(); it != store.end(); ++it) {
+            delete ((*it).second);
+        }
+    }
+public:
+    vector<vector<int> > levelOrderBottom(TreeNode *root) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        store.clear();
+        traverse(root, 0);
+        vector<vector<int> >ans;
+        for (map<int, vector<int>* >::iterator it = store.begin(); it != store.end(); ++it) {
+            ans.push_back(*((*it).second));
+        }
+        clear();
+        return ans;
+    }
+};

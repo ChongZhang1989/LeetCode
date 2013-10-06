@@ -1,0 +1,25 @@
+class Solution {
+public:
+    void merge(int A[], int m, int B[], int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int x = m - 1;
+        int y = n - 1;
+        int *a = A;
+        int *b = B;
+        int i;
+        for (i = n + m - 1; x >=0 && y >= 0; --i) {
+            if (b[y] > a[x]) {
+                a[i] = b[y--];
+            } else {
+                a[i] = a[x--];
+            }
+        }
+        while (x != -1) {
+            a[i--] = a[x--];
+        }
+        while (y != -1) {
+            a[i--] = b[y--];
+        }
+    }
+};

@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<int> grayCode(int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        unordered_set<int>rec;
+        vector<int>ans;
+        rec.insert(0);
+        ans.push_back(0);
+        int t = 0;
+        for (int i = 1; i < 1 << n; ++i) {
+            for (int j = 0; j < n; ++j) {
+        		int mask = 1 << j;
+        		int num = t | mask;
+        		if (!rec.count(num)) {
+        			rec.insert(num);
+        			ans.push_back(num);
+        			t = num;
+        			break;
+        		}
+        		mask =  ~(1 << j);
+        		num =  t & mask;
+        		if (!rec.count(num)) {
+        			rec.insert(num);
+        			ans.push_back(num);
+        			t = num;
+        			break;
+        		}
+        	}
+        }
+        return ans;
+    }
+};

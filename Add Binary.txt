@@ -1,0 +1,44 @@
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int la = a.size();
+        int lb = b.size();
+        reverse(a.begin(), a.end());
+        reverse(b.begin(), b.end());
+        int l = min(la, lb);
+        int extra = 0;
+        string c = "";
+        for (int i = 0; i < l; ++i) {
+            int x = a[i] + b[i] - ('0' * 2) + extra;
+        	extra = x / 2;
+        	x = x % 2;
+        	c += x + '0';
+        }
+        if (l < la) {
+        	for (int i = l; i < la; ++i) {
+        		int x = a[i] + extra - '0';
+        		extra = x / 2;
+        		x = x % 2;
+        		c += x + '0';
+        	}
+        }
+        if (l < lb) {
+        	for (int i = l; i < lb; ++i) {
+        		int x = b[i] + extra - '0';
+        		extra = x / 2;
+        		x = x % 2;
+        		c += x + '0';
+        	}
+        }
+        if (extra) {
+        	c += '1';
+        }
+        string d = "";
+        for (int i = c.size() - 1; i >= 0; --i) {
+        	d += c[i];
+        }
+        return d;
+    }
+};
