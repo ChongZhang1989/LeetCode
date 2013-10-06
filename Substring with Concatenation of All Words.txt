@@ -1,0 +1,37 @@
+class Solution {
+    bool find(string &s, map<string, int> &rec, int start, int l, int ll)
+	{
+		if (start + l - 1 >= s.size())
+			return false;
+		map<string, int> tmp;
+		for (int i = start; i < start + l; i += ll) {
+			string t = s.substr(i, ll);
+			if (!rec.count(t))
+				return false;
+			tmp[t]++;
+			if (tmp[t] > rec[t])
+				return false;
+		}
+		return true;
+	}
+public:
+    vector<int> findSubstring(string S, vector<string> &L) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int lengthSum = 0;
+        for (int i = 0; i < L.size(); ++i) {
+        	lengthSum += L[i].size();
+        }
+        map<string, int>rec;
+        for (int i = 0; i < L.size(); ++i) {
+        	rec[L[i]]++;
+        }
+        vector<int>ans;
+        for (int i = 0; i < S.size(); ++i) {
+        	if (find(S, rec, i, lengthSum, L[0].size())) {
+        		ans.push_back(i);
+        	}
+        }
+        return ans;
+    }
+};
