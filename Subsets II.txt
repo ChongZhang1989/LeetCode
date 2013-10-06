@@ -1,0 +1,53 @@
+class Solution {
+	class keyhash {
+	public:
+		size_t operator () (const vector<int> &a) const
+		{
+			int ans = 0;
+			for (int i = 0; i < a.size(); ++i) {
+				ans <<= 0;
+				ans ^= a[i];
+			}
+			return hash<int>() (ans);
+		}
+	};
+	class keyequal {
+	public:
+		bool operator () (const vector<int> &a, const vector<int> &b) const
+		{
+			if (a.size() != b.size() )
+				return false;
+			for (int i = 0; i < a.size(); ++i) {
+				if (a[i] != b[i])
+					return false;
+			}
+			return true;
+		}
+	};
+	void dfs(vector<int> &s, unordered_set<vector<int>, keyhash, keyequal> &rec, int p, vector<int> result)
+	{
+		if (p == s.size()) {
+			rec.insert(result);
+			return;
+		}
+		for (int i = p; i < s.size(); ++i) {
+			result.push_back(s[i]);
+			dfs(s, rec, i + 1, result);
+			result.pop_back();
+		}
+		dfs(s, rec, s.size(), result);
+	}
+public:
+    vector<vector<int> > subsetsWithDup(vector<int> &S) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+		unordered_set<vector<int>, keyhash, keyequal>rec;
+		sort(S.begin(), S.end());
+		dfs(S, rec, 0, vector<int>(0));
+		vector<vector<int> >ans;
+		for (unordered_set<vector<int>, keyhash, keyequal>::iterator it = rec.begin(); it != rec.end(); ++it) {
+			ans.push_back(*it);
+		}
+		return ans;
+    }
+};
