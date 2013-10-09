@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode *root) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        stack<TreeNode *>s;
+        unordered_set<TreeNode *>rec;
+        rec.insert(NULL);
+        rec.insert(root);
+        if (root != NULL)
+            s.push(root);
+        vector<int>ans;
+        while (!s.empty()) {
+        	if (!rec.count(s.top()->left)) {
+				rec.insert(s.top()->left);
+        		s.push(s.top()->left);
+        	} else {w
+        		ans.push_back(s.top()->val);
+        		TreeNode *tmp = s.top()->right;
+        		s.pop();
+        		if (tmp != NULL) {
+        			s.push(tmp);
+        		}
+        		rec.insert(tmp);
+        	}
+        }
+        return ans;
+    }
+};

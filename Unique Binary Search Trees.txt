@@ -1,0 +1,36 @@
+class Solution {
+    int build(vector<vector<int> > &dp, int smallest, int root, int largest)
+	{
+		int l = 0, r = 0;
+		if (root == smallest) {
+			l = 1;
+		}
+		if (smallest == largest) {
+			return 1;
+		}
+		if (root == largest) {
+			r = 1;
+		}
+		if (dp[largest - root][root - smallest]) {
+			return dp[largest - root][root - smallest];
+		}
+		for (int i = smallest; i <= root - 1; ++i) {
+			l += build(dp, smallest, i, root - 1);
+		}
+		for (int i = root + 1; i <= largest; ++i) {
+			r += build(dp, root + 1, i, largest);
+		}
+		return dp[largest - root][root - smallest] = l * r;
+	}
+public:
+    int numTrees(int n) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int sum = 0;
+        vector<vector<int> >dp(n, vector<int>(n, 0));
+        for (int i = 0; i < n; ++i) {
+        	sum += build(dp, 0, i, n - 1);
+        }
+        return sum;
+    }
+};
