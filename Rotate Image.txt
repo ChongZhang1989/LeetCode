@@ -1,0 +1,18 @@
+class Solution {
+public:
+    void rotate(vector<vector<int> > &matrix) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        int n = matrix.size();
+        for (int i = 0; i < n / 2; ++i) {
+            for (int j = i; j < n - i - 1; ++j) {
+        		int tmp = matrix[i][j];
+        		int m = n - 1;
+        		matrix[i][j] = matrix[m - j][i];
+        		matrix[m - j][i] = matrix[m - i][m - j];
+        		matrix[m - i][m - j] = matrix[j][m - i];
+        		matrix[j][m - i] = tmp;
+        	}
+        }
+    }
+};

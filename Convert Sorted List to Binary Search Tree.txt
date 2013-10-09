@@ -1,0 +1,69 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    ListNode * getmiddle(ListNode *head, ListNode *tail)
+	{
+		ListNode *p1 = head;
+		ListNode *p2 = head;
+		while (p2 != tail) {
+			p2 = p2->next;
+			if (p2 == tail)
+				break;
+			p2 = p2->next;
+			p1 = p1->next;
+		}
+		return p1;
+	}
+	ListNode * getprev(ListNode *l, ListNode *m)
+	{
+		ListNode *p1 = l;
+		while (p1->next != m) {
+			p1 = p1->next;
+		}
+		return p1;
+	}
+	void build(TreeNode *root, ListNode *l, ListNode *m, ListNode *r)
+	{
+		if (l != m) {
+			ListNode *tail = getprev(l, m);
+			ListNode *newm = getmiddle(l, tail);
+			root->left = new TreeNode(newm->val);
+			build(root->left, l, newm, tail);
+		}
+		if (m != r) {
+			ListNode *head = m->next;
+			ListNode *newm = getmiddle(head, r);
+			root->right = new TreeNode(newm->val);
+			build(root->right, head, newm, r);
+		}
+	}
+public:
+    TreeNode *sortedListToBST(ListNode *head) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+    	if (head == NULL)
+    		return NULL;
+    	ListNode *tail = head;
+    	while (tail->next != NULL)
+    		tail = tail->next;
+    	ListNode *m = getmiddle(head, tail);
+    	TreeNode *root = new TreeNode(m->val);
+    	build(root, head, m, tail);
+    	return root;
+    }
+};
