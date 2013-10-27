@@ -16,54 +16,27 @@
  * };
  */
 class Solution {
-    ListNode * getmiddle(ListNode *head, ListNode *tail)
+	TreeNode *solve(ListNode *&head, int l, int r)
 	{
-		ListNode *p1 = head;
-		ListNode *p2 = head;
-		while (p2 != tail) {
-			p2 = p2->next;
-			if (p2 == tail)
-				break;
-			p2 = p2->next;
-			p1 = p1->next;
-		}
-		return p1;
-	}
-	ListNode * getprev(ListNode *l, ListNode *m)
-	{
-		ListNode *p1 = l;
-		while (p1->next != m) {
-			p1 = p1->next;
-		}
-		return p1;
-	}
-	void build(TreeNode *root, ListNode *l, ListNode *m, ListNode *r)
-	{
-		if (l != m) {
-			ListNode *tail = getprev(l, m);
-			ListNode *newm = getmiddle(l, tail);
-			root->left = new TreeNode(newm->val);
-			build(root->left, l, newm, tail);
-		}
-		if (m != r) {
-			ListNode *head = m->next;
-			ListNode *newm = getmiddle(head, r);
-			root->right = new TreeNode(newm->val);
-			build(root->right, head, newm, r);
-		}
+		if (l > r) return NULL;
+		int mid = (l + r) / 2;
+		TreeNode *left = solve(head, l, mid - 1);
+		TreeNode *root = new TreeNode(head->val);
+		head = head->next;
+		root->left = left;
+		root->right = solve(head, mid + 1, r);
+		return root;
 	}
 public:
     TreeNode *sortedListToBST(ListNode *head) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-    	if (head == NULL)
-    		return NULL;
-    	ListNode *tail = head;
-    	while (tail->next != NULL)
-    		tail = tail->next;
-    	ListNode *m = getmiddle(head, tail);
-    	TreeNode *root = new TreeNode(m->val);
-    	build(root, head, m, tail);
-    	return root;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int n = 0;
+        ListNode *p = head;
+        while (p) {
+        	p = p->next;
+        	n++;
+        }
+        TreeNode *tree = solve(head, 0, n - 1);
+        return tree;
     }
 };

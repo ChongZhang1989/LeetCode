@@ -1,0 +1,58 @@
+class Solution {
+	struct node {
+		int x;
+		unordered_set<string>::iterator y;
+		node() {
+			x = -1;
+		}
+		node(int xx, unordered_set<string>::iterator yy) {
+			x = xx;
+			y = yy;
+		}
+	};
+	void dfs(stack<unordered_set<string>::iterator> res, int n, unordered_set<string> &dict, 
+				vector<vector<node> > &dp, vector<string> &ans)
+	{
+		if (n == -1) {
+			string s = *(res.top());
+			res.pop();
+			while (!res.empty()) {
+				s += " ";
+				s += *(res.top());
+				res.pop();
+			}
+			ans.push_back(s);
+			return;
+		}
+		for (int i = 0; i < dp[n].size(); ++i) {
+			res.push(dp[n][i].y);
+			dfs(res, dp[n][i].x, dict, dp, ans);
+			res.pop();
+		}
+	}
+public:
+    vector<string> wordBreak(string s, unordered_set<string> &dict) {
+        int n = s.size();
+    	vector<vector<node> > dp(n);
+    	string t1;
+    	unordered_set<string>::iterator t2;
+    	for (int i = 0; i < n; ++i) {
+    		t1 = s.substr(0, i + 1);
+    		t2 = dict.find(t1);
+    		if (t2 != dict.end()) {
+    			dp[i].push_back(node(-1, t2));
+    		}
+    		for (int j = 1; j <= i; ++j) {
+    			t1 = s.substr(j, i - j + 1);
+    			t2 = dict.find(t1);
+    			if (t2 != dict.end()) {
+    				dp[i].push_back(node(j - 1, t2));
+    			}
+    		}
+    	}
+    	vector<string>ans;
+    	stack<unordered_set<string>::iterator> res;
+    	dfs(res, n - 1, dict, dp, ans);
+    	return ans;
+    }
+};

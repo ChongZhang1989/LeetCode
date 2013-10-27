@@ -1,0 +1,24 @@
+class Solution {
+	bool exist(unordered_set<string> &dict, string &s, int start, int end)
+	{
+		string sub = s.substr(start, end - start + 1);
+		if (dict.count(sub))
+			return true;
+		return false;
+	}
+public:
+    bool wordBreak(string s, unordered_set<string> &dict) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int n = s.size();
+        vector<bool> dp(n, false);
+        for (int i = 0; i < n; ++i) {
+        	dp[i] = dp[i] || exist(dict, s, 0, i);
+        	for (int j = 1; j <= i && !dp[i]; ++j) {
+        		if (!dp[j - 1])
+        			continue;
+        		dp[i] = dp[i] || exist(dict, s, j, i);
+        	}
+        }
+        return dp[n - 1];
+    }
+};

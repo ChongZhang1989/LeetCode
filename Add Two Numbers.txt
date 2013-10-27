@@ -9,52 +9,27 @@
 class Solution {
 public:
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        ListNode *l = NULL;
-        ListNode *p = NULL;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *dummy = new ListNode(0);
+        ListNode *p = dummy;
         int extra = 0;
-        if (l1 != NULL && l2 != NULL) {
-            int x = l1->val + l2->val;
-        	l = new ListNode(x % 10);
-        	p = l;
-        	extra = x / 10;
-        	l1 = l1->next;
-        	l2 = l2->next;
-        }
-        for (; l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next) {
-            int x = l1->val + l2->val + extra;
-            p->next = new ListNode(x % 10);
+        while (l1 != NULL || l2 != NULL || extra != 0) {
+            int sum = 0;
+            if (l1 != NULL) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            if (l2 != NULL) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+            sum += extra;
+            p->next = new ListNode(sum % 10);
+            extra = sum / 10;
             p = p->next;
-            extra = x / 10;
         }
-        while (l1 != NULL) {
-        	int x = l1->val + extra;
-        	extra = x / 10;
-        	l1 = l1->next;
-        	if (l == NULL) {
-        		l = new ListNode(x % 10);
-        		p = l;
-        		continue;
-        	}
-        	p->next = new ListNode(x % 10);
-        	p = p->next;
-        }
-        while (l2 != NULL) {
-        	int x = l2->val + extra;
-        	extra = x / 10;
-        	l2 = l2->next;
-        	if (l == NULL) {
-        		l = new ListNode(x % 10);
-        		p = l;
-        		continue;
-        	}
-        	p->next = new ListNode(x % 10);
-        	p = p->next;
-        }
-        if (extra) {
-        	p->next = new ListNode(1);
-        }
-        return l;
+        p = dummy->next;
+        delete dummy;
+        return p;
     }
 };

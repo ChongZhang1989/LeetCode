@@ -1,29 +1,21 @@
 class Solution {
+    typedef long long ll;
 public:
     bool isPalindrome(int x) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
         if (x < 0)
             return false;
-        int y = x;
-        int pow = 1;
-        y = y / 10;
-        while (y) {
-            pow *= 10;
-            y = y / 10;
+        ll t = 1;
+        while (t * 10 <= x) {
+            t *= 10;
         }
-        y = x;
-        int pow2 = 1;
-        while (true) {
-            if (y / 10 == 0)
-                return true;
-            int a = y / pow;
-            int b = y % 10;
-            if (a != b)
+        while (x) {
+            if (x % 10 != x / t)
                 return false;
-            y = y % pow;
-            y = y / 10;
-            pow /= 100;
+            x %= t;
+            t /= 100;
+            x /= 10;
         }
+        return true;
     }
 };

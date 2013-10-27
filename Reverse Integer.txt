@@ -1,23 +1,20 @@
 class Solution {
 public:
     int reverse(int x) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (x == 0)
-            return 0;
-        vector<int>digits;
-        int symbol = x < 0 ? -1 : 1;
-        x = abs(x);
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int symbol = 0;
+        if (x < 0) {
+            symbol = 1;
+            x = -x;
+        }
+        int sum = 0;
         while (x) {
-            digits.push_back(x % 10);
-            x = x / 10;
-        }
-        int n = digits.size();
-        int sum = digits[0];
-        for (int i = 1; i < n; ++i) {
             sum *= 10;
-            sum += digits[i];
+            sum += x % 10;
+            x /= 10;
         }
-        return sum * symbol;
+        if (symbol)
+            sum = -sum;
+        return sum;
     }
 };
