@@ -1,0 +1,33 @@
+class Solution {
+	typedef long long ll;
+#define row_conflict(row, i) (row & (1 << i))
+#define d1_conflict(d1, x, y, n) (d1 & (1 << (y - x + n) ))
+#define d2_conflict(d2, x, y) (d2 & (1 << (x + y) ))
+	void dfs(int &sum, int cnt, int n, ll row, ll d1, ll d2)
+	{
+		if (cnt == n) {
+			++sum;
+			return;
+		}
+		for (int i = 0; i < n; ++i) {
+			if (!row_conflict(row, i) && !d1_conflict(d1, i, cnt, n) && !d2_conflict(d2, i, cnt)) {
+				row |= (1 << i);
+				d1 |= 1 << (cnt - i + n);
+				d2 |= 1 << (cnt + i);
+				dfs(sum, cnt + 1, n, row, d1, d2);
+				row = row ^ (1 << i);
+				d1 ^= 1 << (cnt - i + n);
+				d2 ^= 1 << (cnt + i);
+			}
+		}
+	}
+public:
+    int totalNQueens(int n) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        ll row = 0, d1 = 0, d2 = 0;
+        int sum = 0;
+        dfs(sum, 0, n, row, d1, d2);
+        return sum;
+    }
+};

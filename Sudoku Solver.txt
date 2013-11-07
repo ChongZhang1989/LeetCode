@@ -1,0 +1,56 @@
+class Solution {
+	bool ok(vector<vector<int> > &row, vector<vector<int> > &col, vector<vector<int> > &sqr, int x, int y, int num)
+	{
+		if (row[x][num]) return false;
+		if (col[y][num]) return false;
+		if (sqr[x / 3 * 3 + y / 3][num]) return false;
+		return true;
+	}
+	void dfs(vector<vector<char> > &board, int &flg, vector<vector<int> > &row, vector<vector<int> > &col, vector<vector<int> > &sqr, 
+				vector<pair<int, int> > &p, int cnt)
+	{
+		if (flg) return;
+		if (cnt == p.size()) {
+			flg = 1;
+			return;
+		}
+		int x = get<0>(p[cnt]);
+		int y = get<1>(p[cnt]);
+		for (int i = 0; i < 9; ++i) {
+			if (ok(row, col, sqr, x, y, i)) {
+				row[x][i] = 1;
+				col[y][i] = 1;
+				sqr[x / 3 * 3 + y / 3][i] = 1;
+				board[x][y] = i + '1';
+				dfs(board, flg, row, col, sqr, p, cnt + 1);
+				if (flg) return;
+				board[x][y] = '.';
+				row[x][i] = 0;
+				col[y][i] = 0;
+				sqr[x / 3 * 3 + y / 3][i] = 0;
+			}
+		}
+	}
+public:
+    void solveSudoku(vector<vector<char> > &board) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<vector<int> >row(9, vector<int>(9, 0));
+        vector<vector<int> >col(9, vector<int>(9, 0));
+        vector<vector<int> >sqr(9, vector<int>(9, 0));
+        vector<pair<int, int> >p;
+        for (int i = 0; i < 9; ++i) {
+        	for (int j = 0; j < 9; ++j) {
+        		if (board[i][j] == '.') {
+        			p.push_back(make_pair(i, j));
+        			continue;
+        		}
+        		int t = board[i][j] - '1';
+        		row[i][t] = 1;
+        		col[j][t] = 1;
+        		sqr[i / 3 * 3 + j / 3][t] = 1;
+        	}
+        }
+        int flg = 0;
+        dfs(board, flg, row, col, sqr, p, 0);
+    }
+};

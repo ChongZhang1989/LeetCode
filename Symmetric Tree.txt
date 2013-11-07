@@ -8,25 +8,52 @@
  * };
  */
 class Solution {
-    bool symmetric(TreeNode *l, TreeNode *r)
-    {
-        if (l == NULL && r == NULL) {
-            return true;
-        } else if (l != NULL && r != NULL) {
-            if (l->val == r->val) {
-                return symmetric(l->left, r->right) && symmetric(l->right, r->left);
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
+    struct Node {
+        int level;
+        int order;
+        TreeNode *n;
+        Node(int l, int o, TreeNode *n_) : level(l), order(o), n(n_) {}
+    };
+    struct Node2 {
+        int order;
+        int val;
+        Node2(int o, int v) : order(o), val(v) {}
+    };
 public:
     bool isSymmetric(TreeNode *root) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (root == NULL)
-            return true;
-        return symmetric(root->left, root->right);
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if (root == NULL) return true;
+        stack<Node>s;
+        s.push(Node(0, 0, root));
+        vector<vector<Node2> >a;
+        a.push_back(vector<Node2>(1, Node2(0, root->val)));
+        while (!s.empty()) {
+            Node tmp = s.top();
+            s.pop();
+            if (tmp.n->left) {
+                s.push(Node(tmp.level + 1, tmp.order * 2, tmp.n->left));
+                if (a.size() <= tmp.level);
+                    a.push_back(vector<Node2>());
+                a[tmp.level + 1].push_back(Node2(tmp.order * 2, tmp.n->left->val));
+            }
+            if (tmp.n->right) {
+                s.push(Node(tmp.level + 1, tmp.order * 2 + 1, tmp.n->right));
+                if (a.size() <= tmp.level);
+                    a.push_back(vector<Node2>());
+                a[tmp.level + 1].push_back(Node2(tmp.order * 2 + 1, tmp.n->right->val));
+            }
+        }
+        for (int i = 1; i < a.size(); ++i) {
+            int l = 0, r = a[i].size() - 1;
+            if (r % 2 == 0) return false;
+            while (l < r) {
+                if (a[i][l].val != a[i][r].val || a[i][l].order != ((1 << i) - 1) - a[i][r].order)
+                    return false;
+                l++;
+                r--;
+            }
+        }
+        return true;
     }
 };

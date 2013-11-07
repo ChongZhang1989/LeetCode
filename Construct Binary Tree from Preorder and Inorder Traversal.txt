@@ -1,0 +1,40 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    int find(int target, vector<int> &a, int l, int r)
+    {
+        for (int i = l; i <= r; ++i)
+            if (a[i] == target)
+                return i;
+    }
+    void build(TreeNode *root, vector<int> &preorder, int l1, int r1,
+                vector<int> &inorder, int l2, int r2)
+    {
+        root->val = preorder[l1];
+        int x = find(preorder[l1], inorder, l2, r2);
+        if (x > l2) {
+            root->left = new TreeNode(0);
+            build(root->left, preorder, l1 + 1, l1 + x - l2, inorder, l2, x - 1);
+        }
+        if (x < r2) {
+            root->right = new TreeNode(0);
+            build(root->right, preorder, r1 - r2 + x + 1, r1, inorder, x + 1, r2);
+        }
+        
+    }
+public:
+    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (preorder.size() == 0) return NULL;
+        TreeNode *root = new TreeNode(0);
+        build(root, preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
+        return root;
+    }
+};

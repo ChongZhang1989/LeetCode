@@ -1,0 +1,39 @@
+class Solution {
+	int direct[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+	void dfs(int &flg, unordered_set<int> &rec, vector<vector<char> > &board, string &word, int cnt, int x, int y)
+	{
+		if (flg) return;
+		if (cnt == word.size()) {
+			flg = 1;
+			return;
+		}
+		int n = board.size();
+		int m = board[0].size();
+		if (x < 0 || y < 0 || x >= n || y >= m) return;
+		if (board[x][y] != word[cnt]) return;
+		if (rec.count(x * m + y)) return;
+		rec.insert(x * m + y);
+		for (int i = 0; i < 4; ++i) {
+			dfs(flg, rec, board, word, cnt + 1, x + direct[i][0], y + direct[i][1]);
+		}
+		rec.erase(x * m + y);
+	}
+public:
+    bool exist(vector<vector<char> > &board, string word) {
+    	int n = board.size();
+    	if (!n) return false;
+		int m = board[0].size();
+		unordered_set<int>rec;
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < m; ++j) {
+				int flg = 0;
+				dfs(flg, rec, board, word, 0, i, j);
+				if (flg) {
+					return true;
+				}
+				rec.clear();
+			}
+		}
+		return false;
+    }
+};

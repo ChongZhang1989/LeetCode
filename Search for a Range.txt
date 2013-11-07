@@ -1,31 +1,47 @@
 class Solution {
+    void binary_search(int *a, int &flg, int &l, int &r, int target, int f)
+    {
+        while (l <= r) {
+            int mid = (l + r) >> 1;
+            if (a[mid] == target) {
+                flg = 1;
+                if (!f)
+                    return;
+                else if (f == 1)
+                    l = mid + 1;
+                else
+                    r = mid - 1;
+            } else if (a[mid] > target)
+                r = mid - 1;
+            else
+                l = mid + 1;
+        }
+    }
 public:
     vector<int> searchRange(int A[], int n, int target) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
         int l = 0, r = n - 1;
-        int *a = A;
-        while (l <= r) {
-            int m = (l + r) >> 1;
-        	if (a[m] == target) {
-        		int x = m - 1;
-        		while (x >= 0 && a[x] == target)
-        			--x;
-        		++x;
-        		int y = m + 1;
-        		while (y < n && a[y] == target)
-        			++y;
-        		--y;
-        		vector<int>ans;
-        		ans.push_back(x);
-        		ans.push_back(y);
-        		return ans;
-        	} else if (a[m] < target) {
-        		l = m + 1;
-        	} else {
-        		r = m - 1;
-        	}
+        int flg = 0;
+        binary_search(A, flg, l, r, target, 0);
+        vector<int>ans(2);
+        if (!flg) {
+            ans[0] = ans[1] = -1;
+            return ans;
         }
-        return vector<int>(2, -1);
+        l = 0;
+        r = n - 1;
+        flg = 0;
+        binary_search(A, flg, l, r, target - 1, 1);
+        int leftside, rightside;
+        leftside = l;
+        l = 0;
+        r = n - 1;
+        flg = 0;
+        binary_search(A, flg, l, r, target + 1, 2);
+        rightside = r;
+        ans[0] = leftside;
+        ans[1] = rightside;
+        return ans;
     }
 };

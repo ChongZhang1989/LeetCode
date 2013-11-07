@@ -36,7 +36,7 @@ public:
         			point->next = lists[p];
         			point = point->next;
         		}
-        		lists[p] = lists[p]->next;
+        		lists[p] = lists[p]->next;	
         	}
         	if (flg)
         		break;

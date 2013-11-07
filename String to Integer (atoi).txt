@@ -1,0 +1,28 @@
+class Solution {
+    typedef long long ll;
+    #define is_num(c) (c >= '0' && c <= '9' ? true : false)
+    #define INT_MAX 0x7fffffff
+    #define INT_MIN (int)0x80000000
+public:
+    int atoi(const char *str) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        int start = 0;
+        for (; str[start]; ++start) {
+            if (is_num(str[start]) || str[start] == '-' || str[start] == '+') break;
+            if (str[start] != ' ') return 0;
+        }
+        int minus = 0;
+        if (str[start] == '+') start++;
+        else if (str[start] == '-') start++, minus = 1;
+        ll sum = 0;
+        for (int i = start; str[i]; ++i) {
+            if (!is_num(str[i])) return minus ? -sum : sum;
+            sum *= 10;
+            sum += str[i] - '0';
+            if (sum >= INT_MAX && !minus) return INT_MAX;
+            if (minus && -sum <= INT_MIN) return INT_MIN;
+        }
+        return minus ? -sum : sum;
+    }
+};

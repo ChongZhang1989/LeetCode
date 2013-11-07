@@ -1,0 +1,36 @@
+class Solution {
+	bool match(map<pair<const char*, const char *>, bool> &rec, const char *s, const char *p)
+	{
+		pair<const char*, const char*> pr = make_pair(s, p);
+		if (rec.count(pr)) {
+			return rec[pr];
+		}
+		if (*s == 0 && *p == 0)
+			return rec[pr] = true;
+		if (*s == 0) {
+			if (*(p + 1) != '*') {
+				return rec[pr] = false;
+			}
+			return rec[pr] = match(rec, s, p + 2);
+		}
+		if (*p == 0)
+			return rec[pr] = false;
+		if (*(p + 1) == '*') {
+			return rec[pr] = ((match(rec, s + 1, p) && (*s == *p || *p == '.')) || match(rec, s, p + 2));
+		}
+		if (*s == *p) {
+			return rec[pr] = match(rec, s + 1, p + 1);
+		}
+		if (*p == '.') {
+			return rec[pr] = match(rec, s + 1, p + 1);
+		}
+		return rec[pr] = false;
+	}
+public:
+    bool isMatch(const char *s, const char *p) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.    
+        map<pair<const char*, const char *>, bool>rec;
+        return match(rec, s, p);
+    }
+};

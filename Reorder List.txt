@@ -1,0 +1,38 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+    ListNode *reorder(ListNode *p1, int cnt, int n)
+    {
+        if (n % 2 && cnt == n / 2) {
+            ListNode *p = p1->next;
+            p1->next = NULL;
+            return p;
+        }
+        if (n % 2 == 0 && cnt == n / 2 - 1) {
+            ListNode *p = p1->next->next;
+            p1->next->next = NULL;
+            return p;
+        }
+        ListNode *p2 = p1->next;
+        ListNode *p3 = reorder(p1->next, cnt + 1, n);
+        ListNode *p4 = p3->next;
+        p1->next = p3;
+        p3->next = p2;
+        return p4;
+    }
+public:
+    void reorderList(ListNode *head) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if (head == NULL) return;
+        int n = 0;
+        for (ListNode *p = head; p; p = p->next, n++);
+        reorder(head,0, n);
+    }
+};

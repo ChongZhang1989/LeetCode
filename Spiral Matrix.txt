@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<vector<int> > generateMatrix(int n) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        vector<vector<int> >a(n, vector<int>(n, 0));
+        int x = 0, y = 0, cnt = 1;
+        int direction[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int d = 0;
+        while (cnt <= n * n) {
+            a[x][y] = cnt++;
+            x += direction[d][0];
+            y += direction[d][1];
+            if (x >= n || y >=n || a[x][y]) {
+                x -= direction[d][0];
+                y -= direction[d][1];
+                d = (d + 1) % 4;
+                x += direction[d][0];
+                y += direction[d][1];
+            }
+        }
+        return a;
+    }
+};

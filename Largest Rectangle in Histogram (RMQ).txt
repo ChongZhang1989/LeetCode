@@ -1,0 +1,50 @@
+class Solution {
+double t =  1e-6;
+	void preprocess(vector<int> &h, vector<vector<int> > &M, int n)
+	{
+		for (int i = 0; i < n; ++i) {
+			M[i][0] = i;
+		}
+		for (int j = 1; (1 << j) <= n; ++j) {
+			for (int i = 0; i + (1 << j) - 1 < n; ++i) {
+				if (h[M[i][j - 1]] < h[M[i + (1 << (j - 1))][j - 1]])
+					M[i][j] = M[i][j - 1];
+				else
+					M[i][j] = M[i + (1 << (j - 1))][j - 1];
+			}
+		}
+	}
+	int RMQ(vector<int> &h, vector<vector<int> > &M, int l, int r)
+	{
+		int k = (int) (log(r - l + 1) / log(2) + t);
+		if (h[M[l][k]] < h[M[r - (1 << k) + 1][k]])
+			return M[l][k];
+		else
+			return M[r - (1 << k) + 1][k];
+	}
+	int solve(vector<int> &h, vector<vector<int> > &M, int l, int r)
+	{
+		if (l == r) return h[l];
+		if (l > r) return 0;
+		int p = RMQ(h, M, l, r);
+		int ans = (r - l + 1) * h[p];
+		int tmp = solve(h, M, l, p - 1);
+		ans = max(ans, tmp);
+		tmp = solve(h, M, p + 1, r);
+		ans = max(ans, tmp);
+		return ans;
+	}
+public:
+    int largestRectangleArea(vector<int> &height) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        int n = height.size();
+        if (!n) return 0;
+        int logn = (int) (log(n) / log(2) + t);
+        vector<vector<int> >M(n + 1, vector<int>(logn + 1, 0));
+        preprocess(height, M, n);
+    	int l = 0;
+    	int r = n - 1;
+    	return solve(height, M, l, r);
+    }
+};

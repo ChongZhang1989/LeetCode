@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int jump(int A[], int n) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        int step = 0;
+        int l = 0, r = 0;
+        while (r < n - 1) {
+            ++step;
+            int nextr = r;
+            for (int i = l; i <= r; ++i) {
+                nextr = max(nextr, A[i] + i);
+            }
+            l++;
+            r = nextr;
+        }
+        return step;
+    }
+};

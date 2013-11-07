@@ -1,93 +1,46 @@
 class Solution {
-    static const int N = 0x3fff;
-    struct node
-    {
-        int pos1, pos2;
-        int val1, val2;
-    };
-    vector<node>hash[N + 1];
-    struct ans
-    {
-        int a[3];
-    };
-    static const int M = 0x3fff;
-    vector<ans>set[M + 1];
-    void add(node t, int pos) {
-        int a[3];
-        a[0] = t.val1;
-        a[1] = t.val2;
-        a[2] = - (t.val1 + t.val2);
-        sort(a, a + 3);
-        long long set_val;
-        set_val = (((a[0] << 1) ^ a[1]) << 1) ^ a[2];
-        int n = set[set_val & M].size();
-        int flg = 1;
-        for (int i = 0; i < n; ++i) {
-            ans t = set[set_val & N][i];
-            int j;
-            for (j = 0; j < 3; ++j) {
-                if (t.a[j] != a[j])
-                    break;
-            }
-            if (j == 3) {
-                flg = 0;
-                break;
-            }
-        }
-        if (flg) {
-            ans t;
-            for (int i = 0; i < 3; ++i) {
-                t.a[i] = a[i];
-            }
-            set[set_val & M].push_back(t);
-        }
-    }
+	class keyhash {
+	public:
+		size_t operator () (const vector<int> &v) const
+		{
+			return hash<int>() ((((v[0] << 1) ^ v[1]) << 1) ^ v[2]);
+		}
+	};
+	class keyequal {
+	public:
+		bool operator () (const vector<int> &a, const vector<int> &b) const
+		{
+			return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+		}
+	};
 public:
     vector<vector<int> > threeSum(vector<int> &num) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        for (int i = 0; i <= N; ++i) {
-            hash[i].clear();
-        }
-        for (int j = 0; j <= M; ++j) {
-            set[j].clear();
-        }
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        vector<vector<int> >ans;
+        unordered_set<vector<int>, keyhash, keyequal>rec;
         int n = num.size();
+        sort(num.begin(), num.end());
         for (int i = 0; i < n; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                int x = num[i] + num[j];
-                node t;
-                t.pos1 = i;
-                t.pos2 = j;
-                t.val1 = num[i];
-                t.val2 = num[j];
-                hash[x & N].push_back(t);
-            }
+        	int l = i + 1;
+        	int r = n - 1;
+        	while (l < r) {
+        		int sum = num[i] + num[l] + num[r];
+        		if (sum == 0) {
+        			int tmp[] = {num[i], num[l], num[r]};
+        			rec.insert(vector<int>(tmp, tmp + 3));
+        			l++;
+        		} else if (sum < 0) {
+        			l++;
+        		} else {
+        			r--;
+        		}
+        	}
         }
-        for (int i = 0; i < n; ++i) {
-            int hash_val = -num[i];
-            int m = hash[hash_val & N].size();
-            for (int j = 0; j < m; ++j) {
-                node t;
-                t = hash[hash_val & N][j];
-                if (t.val1 + t.val2 == hash_val && t.pos1 != i && t.pos2 != i) {
-                    add(t, i);
-                }
-            }
+        unordered_set<vector<int>, keyhash, keyequal>::iterator it;
+        for (it = rec.begin(); it != rec.end(); ++it) {
+        	ans.push_back(*it);
         }
-        vector<vector<int> >vv;
-        
-        for (int i = 0; i <= M; ++i) {
-            n = set[i].size();
-            for (int j = 0; j < n; ++j) {
-                vector<int>v;
-                for (int k = 0; k < 3; ++k) {
-                    v.push_back(set[i][j].a[k]);
-                }
-                vv.push_back(v);
-            }
-        }
-        
-        return vv;
+        return ans;
     }
 };

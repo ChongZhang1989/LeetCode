@@ -8,93 +8,35 @@
  * };
  */
 class Solution {
-    Interval search(int t, vector<Interval> &a, int flg)
-	{
-		Interval x(-1, -1);
-		int l = 0, r = a.size() - 1;
-		while (l <= r) {
-			int m = (l + r) >> 1;
-			if (a[m].start == t) {
-				x.start = m;
-				break; 
-			}
-			else if (a[m].start < t)
-				l = m + 1;
-			else
-				r = m - 1;
-		}
-		if (x.start == -1) {
-			if (flg)
-				x.start = r;
-			else
-				x.start = l;
-		}
-		
-		l = 0, r = a.size() - 1;
-		while (l <= r) {
-			int m = (l + r ) >> 1;
-			if (a[m].end == t) {
-				x.end = m;
-				break;
-			}
-			else if (a[m].end < t)
-				l = m + 1;
-			else
-				r = m - 1;
-		}
-		if (x.end == -1) {
-			if (flg)
-				x.end = r;
-			else
-				x.end = l;
-		}
-		return x;
-	}
+    void merge(vector<Interval> &ans, Interval &interval)
+    {
+        if (!ans.size()) {
+            ans.push_back(interval);
+            return;
+        }
+        int n = ans.size() - 1;
+        if (ans[n].end >= interval.start) {
+            ans[n].end = max(ans[n].end, interval.end);
+        } else {
+            ans.push_back(interval);
+        }
+    }
 public:
     vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        Interval a = search(newInterval.start, intervals, 1);
-        Interval b = search(newInterval.end, intervals, 0);
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
         vector<Interval> ans;
-        for (int i = 0; i < a.end; ++i) {
-        	ans.push_back(intervals[i]);
+        int flg = 0;
+        for (int i = 0; i < intervals.size(); ++i) {
+            if (newInterval.start < intervals[i].start && !flg) {
+                merge(ans, newInterval);
+                flg = 1;
+                --i;
+            } else {
+                merge(ans, intervals[i]);
+            }
         }
-        int x, y;
-        if (a.start < 0) {
-        	x = newInterval.start;
-        } else if (a.start == a.end) {
-        	if (newInterval.start <= intervals[a.end].end) {
-        		x = intervals[a.end].start;
-        	} else {
-        		ans.push_back(intervals[a.end]);
-        		x = newInterval.start;
-        	}
-        } else {
-        	if (a.end >= 0)
-        		ans.push_back(intervals[a.end]);
-        	x = intervals[a.start].start;
-        }
-        
-        if (b.end >= intervals.size()) {
-        	y = newInterval.end;
-        	ans.push_back(Interval(x, y));
-        } else if (b.start == b.end) {
-        	if (newInterval.end >= intervals[b.start].start) {
-        		y = intervals[b.start].end;
-        		ans.push_back(Interval(x, y));
-        	} else {
-        		y = newInterval.end;
-        		ans.push_back(Interval(x, y));
-        		ans.push_back(intervals[b.start]);
-        	}
-        } else {
-        	y = intervals[b.end].end;
-        	ans.push_back(Interval(x, y));
-        }
-        for (int i = b.end + 1; i < intervals.size(); ++i) {
-        	ans.push_back(intervals[i]);
-        }
+        if (!flg) merge(ans, newInterval);
         return ans;
     }
 };

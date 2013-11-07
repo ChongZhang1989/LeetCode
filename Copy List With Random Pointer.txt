@@ -1,0 +1,39 @@
+/**
+ * Definition for singly-linked list with a random pointer.
+ * struct RandomListNode {
+ *     int label;
+ *     RandomListNode *next, *random;
+ *     RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
+ * };
+ */
+class Solution {
+    typedef long long ll;
+    void dfs(unordered_map<ll, ll> &rec, RandomListNode *p1, RandomListNode *p2)
+    {
+        if (rec.count((ll)(p1->next))) {
+            p2->next = (RandomListNode *)rec[(ll)(p1->next)];
+        } else {
+            p2->next = new RandomListNode(p1->next->label);
+            rec[(ll)(p1->next)] = (ll)(p2->next);
+            dfs(rec, p1->next, p2->next);
+        }
+        if (rec.count((ll)(p1->random))) {
+            p2->random = (RandomListNode *)rec[(ll)(p1->random)];
+        } else {
+            p2->random = new RandomListNode(p1->random->label);
+            rec[(ll)(p1->random)] = (ll)(p2->random);
+            dfs(rec, p1->random, p2->random);
+        }
+    }
+public:
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (head == NULL) return NULL;
+        unordered_map<ll, ll>rec;
+        RandomListNode *p = new RandomListNode(head->label);
+        rec[(ll)head] = (ll)p;
+        rec[(ll)(NULL)] = (ll)NULL;
+        dfs(rec, head, p);
+        return p;
+    }
+};
